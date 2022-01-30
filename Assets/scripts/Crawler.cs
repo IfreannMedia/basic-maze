@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Crawler : Maze
@@ -35,7 +33,7 @@ public class Crawler : Maze
             {
                 z += Random.Range(1, 2);
             }
-            done |= (x < 1 || x >= width-1 || z < 0 || z >= depth-1);
+            done |= (x < 1 || x >= width - 1 || z < 0 || z >= depth - 1);
         }
     }
 
@@ -55,7 +53,7 @@ public class Crawler : Maze
             {
                 z += Random.Range(-1, 2);
             }
-            done |= (x < 1 || x >= width-1 || z < 0 || z >= depth-1);
+            done |= (x < 1 || x >= width - 1 || z < 0 || z >= depth - 1);
         }
     }
 }

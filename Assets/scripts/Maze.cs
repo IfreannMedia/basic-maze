@@ -27,6 +27,18 @@ public class Maze : MonoBehaviour
         DrawMap();
     }
 
+    private void InitializeMap()
+    {
+        map = new byte[width, depth];
+        for (int x = 0; x < depth; x++)
+        {
+            for (int z = 0; z < width; z++)
+            {
+                map[x, z] = 1; //1 = wall, 0 = corridor
+            }
+        }
+    }
+
     public virtual void SetEmptyCoordinates()
     {
         for (int x = 0; x < depth; x++)
@@ -59,16 +71,47 @@ public class Maze : MonoBehaviour
         }
     }
 
-    private void InitializeMap()
+    // neighbours as in neighbouring "empty" blocks
+    public int CountOthogonalNeighbours(int x, int z)
     {
-        map = new byte[width, depth];
-        for (int x = 0; x < depth; x++)
+        int count = 0;
+        if (x <= 0 || x >= width - 1 || z <= 0 || z >= depth - 1)
         {
-            for (int z = 0; z < width; z++)
-            {
-
-                map[x, z] = 1; //1 = wall, 0 = corridor
-            }
+            return 5;
         }
+        if (map[x - 1, z] == 0)
+            count++;
+        if (map[x, z + 1] == 0)
+            count++;
+        if (map[x + 1, z] == 0)
+            count++;
+        if (map[x, z - 1] == 0)
+            count++;
+
+        return count;
+    }
+
+    public int CountDiagonalNeighbours(int x, int z)
+    {
+        int count = 0;
+        if (x <= 0 || x >= width - 1 || z <= 0 || z >= depth - 1)
+        {
+            return 5;
+        }
+        if (map[x - 1, z - 1] == 0)
+            count++;
+        if (map[x - 1, z + 1] == 0)
+            count++;
+        if (map[x + 1, z - 1] == 0)
+            count++;
+        if (map[x + 1, z + 1] == 0)
+            count++;
+
+        return count;
+    }
+
+    public int CountAllNeighbours(int x, int z)
+    {
+        return CountOthogonalNeighbours(x, z) + CountDiagonalNeighbours(x, z);
     }
 }

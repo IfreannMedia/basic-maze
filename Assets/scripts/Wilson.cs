@@ -16,7 +16,7 @@ public class Wilson : Maze
             Random.Range(1, width),
             Random.Range(1, depth));
         map.setPartOfMaze(currentLocation);
-        Debug.Log("set initial empty: " + currentLocation.x + ", " + currentLocation.z );
+        Debug.Log("set initial empty: " + currentLocation.x + ", " + currentLocation.z);
         RandomWalk();
     }
 
@@ -24,8 +24,8 @@ public class Wilson : Maze
     {
 
         MapLocation curLoc = new MapLocation(
-    Random.Range(2, width - 1),
-    Random.Range(2, depth - 1));
+            Random.Range(2, width - 1),
+            Random.Range(2, depth - 1));
 
         int loopCounter = 0;
         bool validPath = false;
@@ -40,7 +40,7 @@ public class Wilson : Maze
             {
                 curLoc = nextLoc;
             }
-            validPath = CountOthogonalMazeNeighbours(curLoc) == 1;  
+            validPath = CountOthogonalMazeNeighbours(curLoc) == 1;
 
             loopCounter++;
         }

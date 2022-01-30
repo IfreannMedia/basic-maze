@@ -10,27 +10,40 @@ public class Wilson : Maze
     new MapLocation(0,1),
     new MapLocation(0,-1)
     };
+    private List<MapLocation> notUsed = new List<MapLocation>();
+
     public override void SetEmptyCoordinates()
     {
         MapLocation currentLocation = new MapLocation(
             Random.Range(1, width),
             Random.Range(1, depth));
         map.setPartOfMaze(currentLocation);
-        Debug.Log("set initial empty: " + currentLocation.x + ", " + currentLocation.z);
+        //int loopCounter = 0;
+        //while (GetAvailableCells() > 1 || loopCounter < 100)
+        //{
+        //    Debug.Log("walking...");
+
+        //    RandomWalk();
+        //    loopCounter++;
+        //}
+        //Debug.Log("DONE");
+        GetAvailableCells();
         RandomWalk();
     }
 
     private void RandomWalk()
     {
+        int startIndex = Random.Range(0, notUsed.Count);
+        Debug.Log("startin: " + startIndex);
 
-        MapLocation curLoc = new MapLocation(
-            Random.Range(2, width - 1),
-            Random.Range(2, depth - 1));
-
+        MapLocation curLoc = new MapLocation(notUsed[startIndex]);
+        List<MapLocation> curWalk = new List<MapLocation>();
+        curWalk.Add(curLoc);
         int loopCounter = 0;
         bool validPath = false;
         while (curLoc.x > 0 && curLoc.x < width - 1 && curLoc.z > 0 && curLoc.z < depth - 1 && loopCounter < 5000 && !validPath)
         {
+            Debug.Log("CURLOC: " + curLoc.x + ", " + curLoc.z);
             map.setEmpty(curLoc);
             int dir = Random.Range(0, directions.Count);
             MapLocation nextLoc = new MapLocation(curLoc);
@@ -38,7 +51,9 @@ public class Wilson : Maze
             nextLoc.z += directions[dir].z;
             if (CountOthogonalNeighbours(nextLoc) <= 1)
             {
+                Debug.Log("adding next loc...");
                 curLoc = nextLoc;
+                curWalk.Add(curLoc);
             }
             validPath = CountOthogonalMazeNeighbours(curLoc) == 1;
 
@@ -49,6 +64,13 @@ public class Wilson : Maze
         {
             map.setEmpty(curLoc);
             Debug.Log("Path Found");
+            curWalk.ForEach(loc => map.setPartOfMaze(loc));
+            curWalk.Clear();
+        }
+        else
+        {
+            curWalk.ForEach(loc => map.setFilled(loc));
+            curWalk.Clear();
         }
 
     }
@@ -59,11 +81,33 @@ public class Wilson : Maze
         for (int i = 0; i < directions.Count; i++)
         {
             MapLocation next = new MapLocation(location.x + directions[i].x, location.z + directions[i].z);
-            if (map.isLocationPartOfMaze(next))
+            if (next.x > 0 && next.x < width - 1 && next.z > 0 && next.z < depth - 1 &&
+                map.isLocationPartOfMaze(next))
             {
                 count++;
             }
         }
         return count;
     }
+
+    private int GetAvailableCells()
+    {
+        Debug.Log("GetAvailableCells called");
+        notUsed.Clear();
+        for (int z = 1; z < depth-1; z++)
+        {
+            for (int x = 1; x < width-1; x++)
+            {
+                Debug.Log("GetAvailableCells iteration x: " + x + " , z: " + z);
+                MapLocation loc = new MapLocation(x, z);
+                if (CountOthogonalMazeNeighbours(loc) == 0)
+                {
+                    notUsed.Add(loc);
+                }
+            }
+        }
+        Debug.Log("got not used count: " + notUsed.Count);
+        return notUsed.Count;
+    }
+
 }

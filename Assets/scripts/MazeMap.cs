@@ -1,6 +1,9 @@
+using System.Collections.Generic;
+using UnityEngine;
 public class MazeMap
 {
     private byte[,] map;
+    private List<MapLocation> notUsed = new List<MapLocation>();
 
     public MazeMap(int width, int depth)
     {
@@ -33,6 +36,7 @@ public class MazeMap
 
     public bool isLocationPartOfMaze(MapLocation location)
     {
+        Debug.Log("testing x: " + location.x + " z: " + location.z);
         return map[location.x, location.z] == 2;
     }
 

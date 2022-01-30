@@ -9,6 +9,12 @@ public class MapLocation
         this.x = x;
         this.z = z;
     }
+
+    public MapLocation(MapLocation loc)
+    {
+        this.x = loc.x;
+        this.z = loc.z;
+    }
 }
 
 public class MazeMap
@@ -29,6 +35,11 @@ public class MazeMap
         map[location.x, location.z] = 1;
     }
 
+    public void setPartOfMaze(MapLocation location)
+    {
+        map[location.x, location.z] = 2;
+    }
+
     public bool isLocationEmpty(MapLocation location)
     {
         return map[location.x, location.z] == 0;
@@ -37,6 +48,21 @@ public class MazeMap
     public bool isLocationEmpty(int x, int z)
     {
         return this.isLocationEmpty(new MapLocation(x,z));
+    }
+
+    public bool isLocationPartOfMaze(MapLocation location)
+    {
+        return map[location.x, location.z] == 2;
+    }
+
+    public bool isLocationPartOfMaze(int x, int z)
+    {
+        return this.isLocationPartOfMaze(new MapLocation(x, z));
+    }
+
+    internal bool isLocationUsed(MapLocation location)
+    {
+        return this.isLocationEmpty(location) || this.isLocationPartOfMaze(location);
     }
 }
 
@@ -88,7 +114,7 @@ public class Maze : MonoBehaviour
         {
             for (int z = 0; z < width; z++)
             {
-                if (!map.isLocationEmpty(new MapLocation(x,z)))
+                if (!map.isLocationUsed(new MapLocation(x,z)))
                 {
                     GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     Vector3 pos = new Vector3(x * scale, 0, z * scale);

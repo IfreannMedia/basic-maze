@@ -11,13 +11,42 @@ public class MapLocation
     }
 }
 
+public class MazeMap
+{
+    private byte[,] map;
+
+    public MazeMap(int width, int depth)
+    {
+        map = new byte[width, depth];
+    }
+    public void setEmpty(MapLocation location)
+    {
+        map[location.x, location.z] = 0;
+    }
+
+    public void setFilled(MapLocation location)
+    {
+        map[location.x, location.z] = 1;
+    }
+
+    public bool isLocationEmpty(MapLocation location)
+    {
+        return map[location.x, location.z] == 0;
+    }
+
+    public bool isLocationEmpty(int x, int z)
+    {
+        return this.isLocationEmpty(new MapLocation(x,z));
+    }
+}
+
 
 public class Maze : MonoBehaviour
 {
 
     public int width = 30;
     public int depth = 30;
-    public byte[,] map;
+    public MazeMap map;
     public int scale = 6;
 
     void Start()
@@ -29,12 +58,12 @@ public class Maze : MonoBehaviour
 
     private void InitializeMap()
     {
-        map = new byte[width, depth];
+        map = new MazeMap(width, depth);
         for (int x = 0; x < depth; x++)
         {
             for (int z = 0; z < width; z++)
             {
-                map[x, z] = 1; //1 = wall, 0 = corridor
+                map.setFilled(new MapLocation(x, z));
             }
         }
     }
@@ -47,7 +76,7 @@ public class Maze : MonoBehaviour
             {
                 if (Random.Range(0, 101) < 50)
                 {
-                    map[x, z] = 0;
+                    map.setEmpty(new MapLocation(x, z));
                 }
             }
         }
@@ -59,7 +88,7 @@ public class Maze : MonoBehaviour
         {
             for (int z = 0; z < width; z++)
             {
-                if (map[x, z] == 1)
+                if (!map.isLocationEmpty(new MapLocation(x,z)))
                 {
                     GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     Vector3 pos = new Vector3(x * scale, 0, z * scale);
@@ -72,46 +101,46 @@ public class Maze : MonoBehaviour
     }
 
     // neighbours as in neighbouring "empty" blocks
-    public int CountOthogonalNeighbours(int x, int z)
+    public int CountOthogonalNeighbours(MapLocation location)
     {
         int count = 0;
-        if (x <= 0 || x >= width - 1 || z <= 0 || z >= depth - 1)
+        if (location.x <= 0 || location.x >= width - 1 || location.z <= 0 || location.z >= depth - 1)
         {
             return 5;
         }
-        if (map[x - 1, z] == 0)
+        if (map.isLocationEmpty(location.x - 1, location.z))
             count++;
-        if (map[x, z + 1] == 0)
+        if (map.isLocationEmpty(location.x, location.z + 1))
             count++;
-        if (map[x + 1, z] == 0)
+        if (map.isLocationEmpty(location.x + 1, location.z))
             count++;
-        if (map[x, z - 1] == 0)
+        if (map.isLocationEmpty(location.x, location.z - 1))
             count++;
 
         return count;
     }
 
-    public int CountDiagonalNeighbours(int x, int z)
+    public int CountDiagonalNeighbours(MapLocation location)
     {
         int count = 0;
-        if (x <= 0 || x >= width - 1 || z <= 0 || z >= depth - 1)
+        if (location.x <= 0 || location.x >= width - 1 || location.z <= 0 || location.z >= depth - 1)
         {
             return 5;
         }
-        if (map[x - 1, z - 1] == 0)
+        if (map.isLocationEmpty(location.x - 1, location.z - 1))
             count++;
-        if (map[x - 1, z + 1] == 0)
+        if (map.isLocationEmpty(location.x - 1, location.z + 1))
             count++;
-        if (map[x + 1, z - 1] == 0)
+        if (map.isLocationEmpty(location.x + 1, location.z - 1))
             count++;
-        if (map[x + 1, z + 1] == 0)
+        if (map.isLocationEmpty(location.x + 1, location.z + 1))
             count++;
 
         return count;
     }
 
-    public int CountAllNeighbours(int x, int z)
+    public int CountAllNeighbours(MapLocation location)
     {
-        return CountOthogonalNeighbours(x, z) + CountDiagonalNeighbours(x, z);
+        return CountOthogonalNeighbours(location) + CountDiagonalNeighbours(location);
     }
 }

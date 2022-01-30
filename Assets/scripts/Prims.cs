@@ -8,7 +8,7 @@ public class Prims : Maze
     {
         MapLocation posiiton = new MapLocation(2, 2);
         // set start position empty
-        map[posiiton.x, posiiton.z] = 0;
+        map.setEmpty(posiiton);
 
         // add orthagonal the walls around our position
         List<MapLocation> walls = new List<MapLocation>();
@@ -27,10 +27,10 @@ public class Prims : Maze
             posiiton.z = walls[wallIndex].z;
             //remove it from array
             walls.RemoveAt(wallIndex);
-            if (CountOthogonalNeighbours(posiiton.x, posiiton.z) == 1)
+            if (CountOthogonalNeighbours(posiiton) == 1)
             {
                 // if it has more than 1 orthogonal neighbout, then set it to "empty" (ie another block in a path
-                map[posiiton.x, posiiton.z] = 0;
+                map.setEmpty(posiiton);
                 // then add it's neighboiuts
                 walls.Add(new MapLocation(posiiton.x + 1, posiiton.z));
                 walls.Add(new MapLocation(posiiton.x - 1, posiiton.z));

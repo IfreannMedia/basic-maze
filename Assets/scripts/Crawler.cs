@@ -22,18 +22,19 @@ public class Crawler : Maze
         bool done = false;
         int x = width / 2;
         int z = 1;
+        MapLocation location = new MapLocation(x, z);
         while (!done)
         {
-            map[x, z] = 0;
+            map.setEmpty(location);
             if (Random.Range(0, 101) < 50)
             {
-                x += Random.Range(-1, 2);
+                location.x += Random.Range(-1, 2);
             }
             else
             {
-                z += Random.Range(1, 2);
+                location.z += Random.Range(1, 2);
             }
-            done |= (x < 1 || x >= width - 1 || z < 0 || z >= depth - 1);
+            done |= (location.x < 1 || location.x >= width - 1 || location.z < 0 || location.z >= depth - 1);
         }
     }
 
@@ -42,18 +43,19 @@ public class Crawler : Maze
         bool done = false;
         int x = 1;
         int z = depth / 2;
+        MapLocation location = new MapLocation(x, z);
         while (!done)
         {
-            map[x, z] = 0;
+            map.setEmpty(location);
             if (Random.Range(0, 101) < 50)
             {
-                x += Random.Range(1, 2);
+                location.x += Random.Range(1, 2);
             }
             else
             {
-                z += Random.Range(-1, 2);
+                location.z += Random.Range(-1, 2);
             }
-            done |= (x < 1 || x >= width - 1 || z < 0 || z >= depth - 1);
+            done |= (location.x < 1 || location.x >= width - 1 || location.z < 0 || location.z >= depth - 1);
         }
     }
 }

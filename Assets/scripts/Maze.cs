@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System.Collections.Generic;
 public class MapLocation
 {
     public int x, z;
@@ -25,6 +25,12 @@ public class Maze : MonoBehaviour
     public MazeMap map;
     public int scale = 6;
 
+    protected List<MapLocation> directions = new List<MapLocation>() {
+    new MapLocation(1,0),
+    new MapLocation(-1,0),
+    new MapLocation(0,1),
+    new MapLocation(0,-1)
+    };
     void Start()
     {
         InitializeMap();
@@ -42,8 +48,6 @@ public class Maze : MonoBehaviour
                 map.setFilled(new MapLocation(x, z));
             }
         }
-        Debug.Log("initialized map: " + map);
-        Debug.Log("initialized map: " + map.ToString());
     }
 
     public virtual void SetEmptyCoordinates()
@@ -62,7 +66,6 @@ public class Maze : MonoBehaviour
 
     private void DrawMap()
     {
-        Debug.Log("drawing map...");
         for (int x = 0; x < depth; x++)
         {
             for (int z = 0; z < width; z++)
@@ -70,7 +73,6 @@ public class Maze : MonoBehaviour
                 // if block is not 0 or 2 in the map, then place a block
                 if (!map.isLocationUsed(new MapLocation(x,z)))
                 {
-                    Debug.Log("location is not used, creating primitive block");
                     GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     Vector3 pos = new Vector3(x * scale, 0, z * scale);
                     wall.transform.position = pos;
@@ -123,5 +125,11 @@ public class Maze : MonoBehaviour
     public int CountAllNeighbours(MapLocation location)
     {
         return CountOthogonalNeighbours(location) + CountDiagonalNeighbours(location);
+    }
+
+    protected MapLocation GetRandomNextLocation(MapLocation current)
+    {
+        int dir = Random.Range(0, directions.Count);
+        return new MapLocation(current.x + directions[dir].x, current.z + directions[dir].z);
     }
 }

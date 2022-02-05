@@ -4,12 +4,6 @@ using UnityEngine;
 
 public class Wilson : Maze
 {
-    List<MapLocation> directions = new List<MapLocation>() {
-    new MapLocation(1,0),
-    new MapLocation(-1,0),
-    new MapLocation(0,1),
-    new MapLocation(0,-1)
-    };
     private List<MapLocation> notUsed = new List<MapLocation>();
 
     public override void SetEmptyCoordinates()
@@ -45,10 +39,8 @@ public class Wilson : Maze
                 break;
 
             // get random direction and then the next location in that direction
-            int dir = Random.Range(0, directions.Count);
-            MapLocation nextLoc = new MapLocation(c);
-            nextLoc.x += directions[dir].x;
-            nextLoc.z += directions[dir].z;
+            MapLocation nextLoc = GetRandomNextLocation(c);
+
             // if the neighbours (empty) is greater than 2, "move" to next location, add it to current walk list
             if (CountOthogonalNeighbours(nextLoc) < 2)
             {

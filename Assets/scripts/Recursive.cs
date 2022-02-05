@@ -15,8 +15,13 @@ public class Recursive : Maze
     {
         if (CountOthogonalNeighbours(location) >= 2) return;
         map.setEmpty(location);
-
-        MapLocation nextLoc = GetRandomNextLocation(location);
-        this.Generate(nextLoc);
+       
+        //MapLocation nextLoc = GetRandomNextLocation(location);
+        //this.Generate(nextLoc);
+        directions.Shuffle();
+        this.Generate(new MapLocation(location.x + directions[0].x, location.z + directions[0].z));
+        this.Generate(new MapLocation(location.x + directions[1].x, location.z + directions[1].z));
+        this.Generate(new MapLocation(location.x + directions[2].x, location.z + directions[2].z));
+        this.Generate(new MapLocation(location.x + directions[3].x, location.z + directions[3].z));
     }
 }

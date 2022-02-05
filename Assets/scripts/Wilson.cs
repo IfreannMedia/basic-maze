@@ -18,24 +18,18 @@ public class Wilson : Maze
             Random.Range(1, width),
             Random.Range(1, depth));
         map.setPartOfMaze(currentLocation);
-        //int loopCounter = 0;
-        //while (GetAvailableCells() > 1 || loopCounter < 100)
-        //{
-        //    Debug.Log("walking...");
+        int loopCounter = 0;
+        while (GetAvailableCells() > 1 && loopCounter < 100)
+        {
 
-        //    RandomWalk();
-        //    loopCounter++;
-        //}
-        //Debug.Log("DONE");
-        GetAvailableCells();
-        RandomWalk();
+            RandomWalk();
+            loopCounter++;
+        }
     }
 
     private void RandomWalk()
     {
         int startIndex = Random.Range(0, notUsed.Count);
-        Debug.Log("startin: " + startIndex);
-
         MapLocation curLoc = new MapLocation(notUsed[startIndex]);
         List<MapLocation> curWalk = new List<MapLocation>();
         curWalk.Add(curLoc);
@@ -49,9 +43,8 @@ public class Wilson : Maze
             MapLocation nextLoc = new MapLocation(curLoc);
             nextLoc.x += directions[dir].x;
             nextLoc.z += directions[dir].z;
-            if (CountOthogonalNeighbours(nextLoc) <= 1)
+            if (CountOthogonalNeighbours(nextLoc) < 2)
             {
-                Debug.Log("adding next loc...");
                 curLoc = nextLoc;
                 curWalk.Add(curLoc);
             }
@@ -92,13 +85,11 @@ public class Wilson : Maze
 
     private int GetAvailableCells()
     {
-        Debug.Log("GetAvailableCells called");
         notUsed.Clear();
-        for (int z = 1; z < depth-1; z++)
+        for (int z = 1; z < depth - 1; z++)
         {
-            for (int x = 1; x < width-1; x++)
+            for (int x = 1; x < width - 1; x++)
             {
-                Debug.Log("GetAvailableCells iteration x: " + x + " , z: " + z);
                 MapLocation loc = new MapLocation(x, z);
                 if (CountOthogonalMazeNeighbours(loc) == 0)
                 {
@@ -106,7 +97,6 @@ public class Wilson : Maze
                 }
             }
         }
-        Debug.Log("got not used count: " + notUsed.Count);
         return notUsed.Count;
     }
 

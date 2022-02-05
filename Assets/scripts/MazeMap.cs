@@ -36,7 +36,6 @@ public class MazeMap
 
     public bool isLocationPartOfMaze(MapLocation location)
     {
-        Debug.Log("testing x: " + location.x + " z: " + location.z);
         return map[location.x, location.z] == 2;
     }
 

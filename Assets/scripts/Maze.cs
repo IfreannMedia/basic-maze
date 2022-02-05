@@ -42,6 +42,8 @@ public class Maze : MonoBehaviour
                 map.setFilled(new MapLocation(x, z));
             }
         }
+        Debug.Log("initialized map: " + map);
+        Debug.Log("initialized map: " + map.ToString());
     }
 
     public virtual void SetEmptyCoordinates()
@@ -60,12 +62,15 @@ public class Maze : MonoBehaviour
 
     private void DrawMap()
     {
+        Debug.Log("drawing map...");
         for (int x = 0; x < depth; x++)
         {
             for (int z = 0; z < width; z++)
             {
+                // if block is not 0 or 2 in the map, then place a block
                 if (!map.isLocationUsed(new MapLocation(x,z)))
                 {
+                    Debug.Log("location is not used, creating primitive block");
                     GameObject wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     Vector3 pos = new Vector3(x * scale, 0, z * scale);
                     wall.transform.position = pos;

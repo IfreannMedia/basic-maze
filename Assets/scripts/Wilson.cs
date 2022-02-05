@@ -29,41 +29,48 @@ public class Wilson : Maze
 
     private void RandomWalk()
     {
-        int startIndex = Random.Range(0, notUsed.Count);
-        MapLocation curLoc = new MapLocation(notUsed[startIndex]);
-        List<MapLocation> curWalk = new List<MapLocation>();
-        curWalk.Add(curLoc);
+        // creat list for the random walk, creat c starting position
+        // c is taken fromt he notUsed list, so that position will not create any rooms
+        List<MapLocation> inWalk = new List<MapLocation>();
+        int rsStartIndex = Random.Range(0, notUsed.Count);
+        MapLocation c = new MapLocation(notUsed[rsStartIndex]);
+        inWalk.Add(c);
+
         int loopCounter = 0;
         bool validPath = false;
-        while (curLoc.x > 0 && curLoc.x < width - 1 && curLoc.z > 0 && curLoc.z < depth - 1 && loopCounter < 5000 && !validPath)
+        while (c.x > 0 && c.x < width - 1 && c.z > 0 && c.z < depth - 1 && loopCounter < 5000 && !validPath)
         {
-            Debug.Log("CURLOC: " + curLoc.x + ", " + curLoc.z);
-            map.setEmpty(curLoc);
+            map.setEmpty(c);
+            if (CountOthogonalMazeNeighbours(c) > 1)
+                break;
+
+            // get random direction and then the next location in that direction
             int dir = Random.Range(0, directions.Count);
-            MapLocation nextLoc = new MapLocation(curLoc);
+            MapLocation nextLoc = new MapLocation(c);
             nextLoc.x += directions[dir].x;
             nextLoc.z += directions[dir].z;
+            // if the neighbours (empty) is greater than 2, "move" to next location, add it to current walk list
             if (CountOthogonalNeighbours(nextLoc) < 2)
             {
-                curLoc = nextLoc;
-                curWalk.Add(curLoc);
+                c = nextLoc;
+                inWalk.Add(c);
             }
-            validPath = CountOthogonalMazeNeighbours(curLoc) == 1;
+            // determin if path is valid, if the maze neighbours is greater than 1, then we are creating a room
+            validPath = CountOthogonalMazeNeighbours(c) == 1;
 
             loopCounter++;
         }
 
         if (validPath)
         {
-            map.setEmpty(curLoc);
-            Debug.Log("Path Found");
-            curWalk.ForEach(loc => map.setPartOfMaze(loc));
-            curWalk.Clear();
+            map.setEmpty(c);
+            inWalk.ForEach(loc => map.setPartOfMaze(loc));
+            inWalk.Clear();
         }
         else
         {
-            curWalk.ForEach(loc => map.setFilled(loc));
-            curWalk.Clear();
+            inWalk.ForEach(loc => map.setFilled(loc));
+            inWalk.Clear();
         }
 
     }

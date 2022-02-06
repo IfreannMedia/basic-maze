@@ -136,6 +136,7 @@ GameObject:
   - component: {fileID: 424136219}
   - component: {fileID: 424136220}
   - component: {fileID: 424136221}
+  - component: {fileID: 424136222}
   m_Layer: 0
   m_Name: maze-generator
   m_TagString: Untagged
@@ -211,9 +212,24 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 424136216}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 715e9a7e77d0e8141ba0f216fbc0fcba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  width: 30
+  depth: 30
+  scale: 6
+--- !u!114 &424136222
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 424136216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95abd5db4abdebf41ba200e364369be3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   width: 30
